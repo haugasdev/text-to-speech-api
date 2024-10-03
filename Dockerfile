@@ -6,7 +6,10 @@ RUN apk update && \
         gcc \
         libffi-dev \
         musl-dev \
-        git
+        git \
+        python3-dev \
+        py3-pip \
+        build-base
 
 ENV PYTHONIOENCODING=utf-8
 WORKDIR /app
@@ -17,7 +20,9 @@ USER app
 ENV PATH="/home/app/.local/bin:${PATH}"
 
 COPY --chown=app:app requirements.txt .
-RUN pip install --user -r requirements.txt && \
+RUN pip install --user --upgrade pip && \
+    pip install --user cython && \
+    pip install --user -r requirements.txt && \
     rm requirements.txt
 
 COPY --chown=app:app . .
